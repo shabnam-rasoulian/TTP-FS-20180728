@@ -15,7 +15,7 @@ const User = db.define('user', {
     unique: true,
     allowNull: false
   },
-  budget: {
+  balance: {
     type: Sequelize.FLOAT,
     defaultValue: 5000
   },
