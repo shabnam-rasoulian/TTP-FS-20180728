@@ -1,36 +1,85 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {Link} from 'react-router-dom'
 import {logout} from '../store'
+import Toolbar from '@material-ui/core/Toolbar'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import {withStyles} from '@material-ui/core/styles'
+import {withRouter} from 'react-router'
 
-const Navbar = ({handleClick, isLoggedIn}) => (
-  <div>
-    <h1>Finance</h1>
-    <nav>
+const styles = theme => ({
+  root: {
+    width: 'auto',
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(1100 + theme.spacing.unit * 3 * 2)]: {
+      width: 1100,
+      marginLeft: 'auto',
+      marginRight: 'auto'
+    }
+  },
+  header: {
+    textTransform: 'capitalize',
+    backgroundColor: 'transparent',
+    '&:hover': {
+      backgroundColor: 'transparent'
+    },
+    fontFamily: 'Lobster',
+    fontSize: '28pt'
+  },
+  toolbarMain: {
+    borderBottom: `1px solid ${theme.palette.grey[300]}`
+  },
+  toolbarTitle: {
+    flex: 1
+  }
+})
+
+const Navbar = ({classes, handleClick, isLoggedIn}) => (
+  <div className={classes.root}>
+    <Toolbar className={classes.toolbarMain}>
       {isLoggedIn ? (
         <div>
-          {/* The navbar will show these links after you log in */}
-          <Link to="/home">Home</Link>
-          <a href="#" onClick={handleClick}>
+          <Button variant="outlined" size="small" onClick={handleClick}>
             Logout
-          </a>
+          </Button>
         </div>
       ) : (
         <div>
-          {/* The navbar will show these links before you log in */}
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
+          <Button variant="outlined" size="small" href="/signup">
+            Sign up
+          </Button>
+          <Button size="small" href="/login">
+            Login
+          </Button>
         </div>
       )}
-    </nav>
-    <hr />
+      <Typography
+        variant="headline"
+        color="inherit"
+        align="center"
+        noWrap
+        className={classes.toolbarTitle}
+      >
+        <Button
+          size="large"
+          href="/"
+          disableFocusRipple
+          disableRipple
+          className={classes.header}
+        >
+          Vestguard
+        </Button>
+      </Typography>
+    </Toolbar>
   </div>
 )
 
 const mapState = state => {
   return {
-    isLoggedIn: !!state.user.id
+    isLoggedIn: !!state.user.id,
+    user: state.user
   }
 }
 
@@ -42,9 +91,11 @@ const mapDispatch = dispatch => {
   }
 }
 
-export default connect(mapState, mapDispatch)(Navbar)
+const withStyleNavbar = withStyles(styles)(withRouter(Navbar))
+export default connect(mapState, mapDispatch)(withStyleNavbar)
 
 Navbar.propTypes = {
   handleClick: PropTypes.func.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired,
+  classes: PropTypes.object.isRequired
 }
