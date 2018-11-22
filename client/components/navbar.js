@@ -73,6 +73,32 @@ const Navbar = ({classes, handleClick, isLoggedIn}) => (
         </Button>
       </Typography>
     </Toolbar>
+    {isLoggedIn && (
+      <Toolbar variant="dense" className={classes.toolbarSecondary}>
+        <Typography color="inherit" noWrap>
+          <Button
+            size="small"
+            href="/transactions"
+            disableFocusRipple
+            disableRipple
+            className={classes.menu}
+          >
+            Transaction
+          </Button>
+        </Typography>
+        <Typography color="inherit" noWrap>
+          <Button
+            size="small"
+            href="/portfolio"
+            disableFocusRipple
+            disableRipple
+            className={classes.menu}
+          >
+            Portfolio
+          </Button>
+        </Typography>
+      </Toolbar>
+    )}
   </div>
 )
 
