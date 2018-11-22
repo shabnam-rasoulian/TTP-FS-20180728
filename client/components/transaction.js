@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {fetchTransactions} from '../store/transaction'
+import CircularIndeterminate from './progress'
 
 class Transaction extends Component {
   constructor(props) {
@@ -12,10 +13,9 @@ class Transaction extends Component {
   }
 
   render() {
-    if (this.props.isFetching) {
-      return <div>Loading transactions!</div>
-    }
-    return (
+    return this.props.isFetching ? (
+      <CircularIndeterminate />
+    ) : (
       <div>
         <ul>
           {this.props.transactions.map(transaction => (
