@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
 import {withStyles} from '@material-ui/core/styles'
 import {withRouter} from 'react-router'
+import {Link} from 'react-router-dom'
 
 const styles = theme => ({
   root: {
@@ -78,23 +79,21 @@ const Navbar = ({classes, handleClick, isLoggedIn}) => (
         <Typography color="inherit" noWrap>
           <Button
             size="small"
-            href="/transactions"
             disableFocusRipple
             disableRipple
             className={classes.menu}
           >
-            Transaction
+            <Link to="/transactions">Transactions</Link>
           </Button>
         </Typography>
         <Typography color="inherit" noWrap>
           <Button
             size="small"
-            href="/portfolio"
             disableFocusRipple
             disableRipple
             className={classes.menu}
           >
-            Portfolio
+            <Link to="/portfolio">Portfolio</Link>
           </Button>
         </Typography>
       </Toolbar>
