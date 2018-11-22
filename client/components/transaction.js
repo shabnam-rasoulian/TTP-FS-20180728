@@ -3,6 +3,25 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {fetchTransactions} from '../store/transaction'
 import CircularIndeterminate from './progress'
+import {withStyles} from '@material-ui/core/styles'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import Paper from '@material-ui/core/Paper'
+
+const styles = {
+  root: {
+    width: '50%',
+    overflowX: 'auto',
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  },
+  table: {
+    minWidth: 700
+  }
+}
 
 class Transaction extends Component {
   constructor(props) {
@@ -14,20 +33,39 @@ class Transaction extends Component {
   }
 
   render() {
-    if (this.props.isFetching) {
+    const {classes, isFetching, transactions} = this.props
+    if (isFetching) {
       return <CircularIndeterminate />
     }
-    const transactions = this.props.transactions
     return transactions.length === 0 ? (
       <div>No transactions!</div>
     ) : (
-      <div>
-        <ul>
-          {transactions.map(transaction => (
-            <li key={transaction.id}>{transaction.ticker}</li>
-          ))}
-        </ul>
-      </div>
+      <Paper className={classes.root}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Type</TableCell>
+              <TableCell>Ticker</TableCell>
+              <TableCell numeric>Quantity</TableCell>
+              <TableCell numeric>Price($)</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {transactions.map(transaction => {
+              return (
+                <TableRow key={transaction.id}>
+                  <TableCell component="th" scope="row">
+                    {transaction.tradeType}
+                  </TableCell>
+                  <TableCell>{transaction.ticker}</TableCell>
+                  <TableCell numeric>{transaction.quantity}</TableCell>
+                  <TableCell numeric>{transaction.price}</TableCell>
+                </TableRow>
+              )
+            })}
+          </TableBody>
+        </Table>
+      </Paper>
     )
   }
 }
@@ -48,7 +86,9 @@ const mapDispatch = dispatch => {
   }
 }
 
-const withStyleTransaction = Transaction
+const withStyleTransaction = withStyles(styles)(Transaction)
 export default connect(mapState, mapDispatch)(withStyleTransaction)
 
-Transaction.propTypes = {}
+Transaction.propTypes = {
+  classes: PropTypes.object.isRequired
+}
