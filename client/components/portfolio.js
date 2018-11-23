@@ -10,6 +10,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 
 const styles = {
   root: {
@@ -24,46 +25,67 @@ const styles = {
 }
 
 class Portfolio extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
     this.props.loadPortfolios(this.props.user.id)
   }
 
   render() {
-    const {classes, isFetching, portfolios} = this.props
+    const {classes, isFetching, portfolios, user} = this.props
     if (isFetching) {
       return <CircularIndeterminate />
     }
     return portfolios.length === 0 ? (
       <div>No portfolio!</div>
     ) : (
-      <Paper className={classes.root}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Ticker</TableCell>
-              <TableCell numeric>Quantity</TableCell>
-              <TableCell numeric>Total($)</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {portfolios.map(portfolio => {
-              return (
-                <TableRow key={portfolio.id}>
-                  <TableCell component="th" scope="row">
-                    {portfolio.ticker}
-                  </TableCell>
-                  <TableCell numeric>{portfolio.quantity}</TableCell>
-                  <TableCell numeric>{portfolio.quantity}</TableCell>
-                </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
-      </Paper>
+      <Typography className={classes.root}>
+        <Typography>Available fund: {user.balance}</Typography>
+        <Typography>
+          Portfolio:{' '}
+          {user.balance +
+            portfolios.reduce(
+              (acc, portfolio) => acc + portfolio.quantity * portfolio.price,
+              0
+            )}
+        </Typography>
+        <Paper>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Ticker</TableCell>
+                <TableCell numeric>Quantity</TableCell>
+                <TableCell numeric>Total($)</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {portfolios.map(portfolio => {
+                let color
+                if (portfolio.price === portfolio.open) {
+                  color = 'grey'
+                } else if (portfolio.price > portfolio.open) {
+                  color = 'green'
+                } else {
+                  color = 'red'
+                }
+                return (
+                  <TableRow key={portfolio.id}>
+                    <TableCell
+                      component="th"
+                      scope="row"
+                      style={{color: color}}
+                    >
+                      {portfolio.ticker}
+                    </TableCell>
+                    <TableCell numeric>{portfolio.quantity}</TableCell>
+                    <TableCell numeric style={{color: color}}>
+                      {(portfolio.quantity * portfolio.price).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </Paper>
+      </Typography>
     )
   }
 }
