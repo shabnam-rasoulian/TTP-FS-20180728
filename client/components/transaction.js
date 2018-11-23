@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {fetchTransactions} from '../store/transaction'
+import {fetchTransactions} from '../store'
 import CircularIndeterminate from './progress'
 import {withStyles} from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
@@ -90,5 +90,9 @@ const withStyleTransaction = withStyles(styles)(Transaction)
 export default connect(mapState, mapDispatch)(withStyleTransaction)
 
 Transaction.propTypes = {
+  user: PropTypes.object.isRequired,
+  transactions: PropTypes.array.isRequired,
+  isFetching: PropTypes.bool.isRequired,
+  loadTransactions: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 }
