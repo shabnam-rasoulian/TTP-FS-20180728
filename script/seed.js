@@ -60,7 +60,7 @@ async function seed() {
   ])
 
   await Promise.all([
-    User.update({balance: 4316.5}, {where: {id: 1}, returning: true}),
+    User.update({balance: 2553.9}, {where: {id: 1}, returning: true}),
     User.update({balance: 2853}, {where: {id: 2}, returning: true})
   ])
 
