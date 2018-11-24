@@ -34,6 +34,19 @@ const styles = theme => ({
   },
   toolbarTitle: {
     flex: 1
+  },
+  menu: {
+    '&:hover': {
+      backgroundColor: 'transparent'
+    }
+  },
+  link: {
+    padding: 10,
+    '&:hover': {
+      color: '#222',
+      backgroundColor: 'transparent'
+    },
+    color: '#555'
   }
 })
 
@@ -65,7 +78,7 @@ const Navbar = ({classes, handleClick, isLoggedIn}) => (
       >
         <Button
           size="large"
-          href="/"
+          href="/transactions"
           disableFocusRipple
           disableRipple
           className={classes.header}
@@ -83,7 +96,9 @@ const Navbar = ({classes, handleClick, isLoggedIn}) => (
             disableRipple
             className={classes.menu}
           >
-            <Link to="/transactions">Transactions</Link>
+            <Link className={classes.link} to="/transactions">
+              Transactions
+            </Link>
           </Button>
         </Typography>
         <Typography color="inherit" noWrap>
@@ -93,7 +108,9 @@ const Navbar = ({classes, handleClick, isLoggedIn}) => (
             disableRipple
             className={classes.menu}
           >
-            <Link to="/portfolio">Portfolio</Link>
+            <Link className={classes.link} to="/portfolio">
+              Portfolio
+            </Link>
           </Button>
         </Typography>
         <Typography color="inherit" noWrap>
@@ -103,7 +120,9 @@ const Navbar = ({classes, handleClick, isLoggedIn}) => (
             disableRipple
             className={classes.menu}
           >
-            <Link to="/buy">Buy</Link>
+            <Link className={classes.link} to="/buy">
+              Buy
+            </Link>
           </Button>
         </Typography>
       </Toolbar>
