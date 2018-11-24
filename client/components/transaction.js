@@ -10,6 +10,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 
 const styles = {
   root: {
@@ -38,7 +39,7 @@ class Transaction extends Component {
       return <CircularIndeterminate />
     }
     return transactions.length === 0 ? (
-      <div>No transactions!</div>
+      <Typography className={classes.root}>No portfolio!</Typography>
     ) : (
       <Paper className={classes.root}>
         <Table className={classes.table}>
