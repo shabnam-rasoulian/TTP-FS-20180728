@@ -4,6 +4,8 @@ import withStyles from '@material-ui/core/styles/withStyles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Paper from '@material-ui/core/Paper'
 import Stepper from '@material-ui/core/Stepper'
+import Chip from '@material-ui/core/Chip'
+import DoneIcon from '@material-ui/icons/Done'
 import {connect} from 'react-redux'
 import Step from '@material-ui/core/Step'
 import StepLabel from '@material-ui/core/StepLabel'
@@ -66,6 +68,8 @@ class Buy extends Component {
     this.handleChange = this.handleChange.bind(this)
     this.setPrice = this.setPrice.bind(this)
     this.balanceCheck = this.balanceCheck.bind(this)
+    this.retry = this.retry.bind(this)
+    this.gotoPortfolio = this.gotoPortfolio.bind(this)
   }
 
   handleChange(name, value) {
@@ -104,6 +108,13 @@ class Buy extends Component {
 
   balanceCheck(hasEnoughFunds) {
     this.setState({hasEnoughFunds})
+  }
+
+  retry() {
+    this.setState({activeStep: 0})
+  }
+  gotoPortfolio() {
+    this.props.history.push('/portfolio')
   }
 
   getStepContent(step) {
@@ -154,8 +165,26 @@ class Buy extends Component {
             <React.Fragment>
               {activeStep === steps.length ? (
                 <React.Fragment>
-                  <Typography variant="h5" gutterBottom>
-                    Your order has been confirmed.
+                  <Typography variant="h5" gutterBottom align="center">
+                    {this.props.error === null ? (
+                      <Chip
+                        label="Order confirmed!"
+                        clickable
+                        className={classes.chip}
+                        color="primary"
+                        onDelete={this.gotoPortfolio}
+                        deleteIcon={<DoneIcon />}
+                        variant="outlined"
+                      />
+                    ) : (
+                      <Chip
+                        label="Cannot confirm order. Please try again."
+                        onDelete={this.retry}
+                        className={classes.chip}
+                        color="secondary"
+                        variant="outlined"
+                      />
+                    )}
                   </Typography>
                 </React.Fragment>
               ) : (
@@ -196,7 +225,8 @@ Buy.propTypes = {
 
 const mapState = state => {
   return {
-    user: state.user
+    user: state.user,
+    error: state.transactions.error
   }
 }
 const mapDispatch = dispatch => ({
