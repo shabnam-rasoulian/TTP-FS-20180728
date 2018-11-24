@@ -52,7 +52,9 @@ class Portfolio extends Component {
     return portfolios.length === 0 ? (
       <React.Fragment>
         <CssBaseline />
-        <Typography className={classes.root}>No portfolio!</Typography>
+        <Typography component="h6" variant="h6" className={classes.root}>
+          You have no portfolio yet!
+        </Typography>
       </React.Fragment>
     ) : (
       <React.Fragment>
