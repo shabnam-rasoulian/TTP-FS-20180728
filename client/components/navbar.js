@@ -96,6 +96,16 @@ const Navbar = ({classes, handleClick, isLoggedIn}) => (
             <Link to="/portfolio">Portfolio</Link>
           </Button>
         </Typography>
+        <Typography color="inherit" noWrap>
+          <Button
+            size="small"
+            disableFocusRipple
+            disableRipple
+            className={classes.menu}
+          >
+            <Link to="/buy">Buy</Link>
+          </Button>
+        </Typography>
       </Toolbar>
     )}
   </div>
