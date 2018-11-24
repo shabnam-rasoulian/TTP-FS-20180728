@@ -56,7 +56,7 @@ class Buy extends Component {
     this.state = {
       activeStep: 0,
       ticker: '',
-      shares: 0,
+      quantity: 0,
       price: 0,
       hasEnoughFunds: false
     }
@@ -77,7 +77,7 @@ class Buy extends Component {
       this.props.buy(
         this.props.user.id,
         this.state.ticker,
-        this.state.shares,
+        this.state.quantity,
         this.state.price
       )
     }
@@ -99,7 +99,7 @@ class Buy extends Component {
   }
 
   setPrice(price) {
-    this.setState({[price]: price})
+    this.setState({price})
   }
 
   balanceCheck(hasEnoughFunds) {
@@ -114,13 +114,19 @@ class Buy extends Component {
         return (
           <BalanceCheck
             ticker={this.state.ticker}
-            shares={this.state.shares}
+            quantity={this.state.quantity}
             getPrice={this.setPrice}
             onFetch={this.balanceCheck}
           />
         )
       case 2:
-        return <Review />
+        return (
+          <Review
+            ticker={this.state.ticker}
+            quantity={this.state.quantity}
+            price={this.state.price}
+          />
+        )
       default:
         throw new Error('Unknown step')
     }
@@ -194,8 +200,8 @@ const mapState = state => {
   }
 }
 const mapDispatch = dispatch => ({
-  buy: (userId, ticker, shares, price) =>
-    dispatch(buyTransaction(userId, ticker, shares, price))
+  buy: (userId, ticker, quantity, price) =>
+    dispatch(buyTransaction(userId, ticker, quantity, price))
 })
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Buy))

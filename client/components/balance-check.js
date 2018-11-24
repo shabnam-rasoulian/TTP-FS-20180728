@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import axios from 'axios'
+import Typography from '@material-ui/core/Typography'
 
 class BalanceCheck extends Component {
   constructor(props) {
@@ -20,7 +21,8 @@ class BalanceCheck extends Component {
       )
       .then(res => {
         const price = res.data[this.props.ticker].price
-        const cost = price * this.props.shares
+        this.props.getPrice(price)
+        const cost = price * this.props.quantity
         const balance = this.props.balance - cost
         this.props.onFetch(balance >= 0)
         this.setState({price: price, isFetching: false})
@@ -34,15 +36,21 @@ class BalanceCheck extends Component {
     if (this.state.isFetching) {
       return <div>Fetching the price!</div>
     }
-    const cost = this.state.price * this.props.shares
+    const cost = this.state.price * this.props.quantity
     const balance = this.props.balance - cost
     return balance < 0 ? (
-      <div>Not enough fund!</div>
+      <Typography>Not enough fund!</Typography>
     ) : (
-      <div>
-        This order will cost you ${cost} and your new balance is ${balance}.
-        Click next to confirm your order or click back to change it.
-      </div>
+      <Typography>
+        <Typography variant="h6" gutterBottom>
+          The total cost is ${cost.toFixed(2)} and your new balance would be ${balance.toFixed(
+            2
+          )}.
+        </Typography>
+        <Typography>
+          Click next to confirm your order or click back to change it.
+        </Typography>
+      </Typography>
     )
   }
 }

@@ -26,10 +26,10 @@ class BuyForm extends Component {
             <TextField
               required
               id="share"
-              name="shares"
-              label="Shares"
+              name="quantity"
+              label="Quantity"
               fullWidth
-              autoComplete="share"
+              autoComplete="quantity"
               onChange={this.handleChange}
             />
           </Grid>
