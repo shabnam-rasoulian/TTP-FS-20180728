@@ -42,13 +42,23 @@ class BalanceCheck extends Component {
       <Typography>Not enough fund!</Typography>
     ) : (
       <Typography>
-        <Typography variant="h6" gutterBottom>
-          The total cost is ${cost.toFixed(2)} and your new balance would be ${balance.toFixed(
-            2
-          )}.
+        <Typography
+          component="h6"
+          variant="h6"
+          align="center"
+          color="textPrimary"
+          gutterBottom
+        >
+          Total Cost: ${cost.toFixed(2)}
         </Typography>
-        <Typography>
-          Click next to confirm your order or click back to change it.
+        <Typography
+          component="subtitle1"
+          variant="subtitle1"
+          align="center"
+          color="textPrimary"
+          gutterBottom
+        >
+          Your new balance would be ${balance.toFixed(2)}
         </Typography>
       </Typography>
     )
