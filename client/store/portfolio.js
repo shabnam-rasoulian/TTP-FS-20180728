@@ -9,6 +9,9 @@ const getPortfolios = portfolios => ({type: GET_PORTFOLIOS, portfolios})
 export const fetchPortfolios = id => async dispatch => {
   try {
     const {data: portfolios} = await axios.get(`/api/portfolios/${id}`)
+    if (portfolios.length === 0) {
+      dispatch(getPortfolios(portfolios))
+    }
     const symbols = portfolios.map(portfolio => portfolio.ticker).join(',')
     const {data} = await axios.get(
       `https://api.iextrading.com/1.0/stock/market/batch?symbols=${symbols}&types=quote&range=1m&last=1`

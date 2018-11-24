@@ -35,7 +35,7 @@ class Portfolio extends Component {
       return <CircularIndeterminate />
     }
     return portfolios.length === 0 ? (
-      <div>No portfolio!</div>
+      <Typography className={classes.root}>No portfolio!</Typography>
     ) : (
       <Typography className={classes.root}>
         <Typography>Available fund: {user.balance}</Typography>
