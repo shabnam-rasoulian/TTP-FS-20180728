@@ -39,7 +39,9 @@ class BalanceCheck extends Component {
     const cost = this.state.price * this.props.quantity
     const balance = this.props.balance - cost
     return balance < 0 ? (
-      <Typography>Not enough fund!</Typography>
+      <Typography component="h6" variant="h6" align="center">
+        Sorry! Not have enough fund available for this transaction!
+      </Typography>
     ) : (
       <Typography>
         <Typography
