@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {fetchTransactions} from '../store'
 import CircularIndeterminate from './progress'
 import {withStyles} from '@material-ui/core/styles'
+import CssBaseline from '@material-ui/core/CssBaseline'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
@@ -12,23 +13,33 @@ import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 
-const styles = {
+const styles = theme => ({
   root: {
-    width: '50%',
-    overflowX: 'auto',
-    marginLeft: 'auto',
-    marginRight: 'auto'
+    width: 'auto',
+    marginLeft: theme.spacing.unit * 2,
+    marginRight: theme.spacing.unit * 2,
+    [theme.breakpoints.up(1000 + theme.spacing.unit * 2 * 2)]: {
+      width: 1000,
+      marginLeft: 'auto',
+      marginRight: 'auto'
+    }
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 3,
+    padding: theme.spacing.unit * 2,
+    [theme.breakpoints.up(600 + theme.spacing.unit * 3 * 2)]: {
+      marginTop: theme.spacing.unit * 6,
+      marginBottom: theme.spacing.unit * 6,
+      padding: theme.spacing.unit * 3
+    }
   },
   table: {
     minWidth: 700
   }
-}
+})
 
 class Transaction extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   componentDidMount() {
     this.props.loadTransactions(this.props.user.id)
   }
@@ -39,34 +50,46 @@ class Transaction extends Component {
       return <CircularIndeterminate />
     }
     return transactions.length === 0 ? (
-      <Typography className={classes.root}>No portfolio!</Typography>
+      <React.Fragment>
+        <CssBaseline />
+        <Typography className={classes.root}>No portfolio!</Typography>
+      </React.Fragment>
     ) : (
-      <Paper className={classes.root}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Type</TableCell>
-              <TableCell>Ticker</TableCell>
-              <TableCell numeric>Quantity</TableCell>
-              <TableCell numeric>Price($)</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {transactions.map(transaction => {
-              return (
-                <TableRow key={transaction.id}>
-                  <TableCell component="th" scope="row">
-                    {transaction.tradeType}
-                  </TableCell>
-                  <TableCell>{transaction.ticker}</TableCell>
-                  <TableCell numeric>{transaction.quantity}</TableCell>
-                  <TableCell numeric>{transaction.price}</TableCell>
+      <React.Fragment>
+        <CssBaseline />
+        <Typography className={classes.root}>
+          <Paper className={classes.paper}>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Ticker</TableCell>
+                  <TableCell numeric>Quantity</TableCell>
+                  <TableCell numeric>Price($)</TableCell>
+                  <TableCell>Date</TableCell>
                 </TableRow>
-              )
-            })}
-          </TableBody>
-        </Table>
-      </Paper>
+              </TableHead>
+              <TableBody>
+                {transactions.map(transaction => {
+                  return (
+                    <TableRow key={transaction.id}>
+                      <TableCell component="th" scope="row">
+                        {transaction.tradeType}
+                      </TableCell>
+                      <TableCell>{transaction.ticker}</TableCell>
+                      <TableCell numeric>{transaction.quantity}</TableCell>
+                      <TableCell numeric>{transaction.price}</TableCell>
+                      <TableCell>
+                        {new Date(transaction.createdAt).toDateString()}
+                      </TableCell>
+                    </TableRow>
+                  )
+                })}
+              </TableBody>
+            </Table>
+          </Paper>
+        </Typography>
+      </React.Fragment>
     )
   }
 }
