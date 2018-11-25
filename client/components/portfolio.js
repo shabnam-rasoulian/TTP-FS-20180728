@@ -90,6 +90,7 @@ class Portfolio extends Component {
         this.state.selectedQuantity,
         price
       )
+      this.setState({selectedQuantity: 0})
     } catch (err) {
       console.log(err)
     }
@@ -104,7 +105,7 @@ class Portfolio extends Component {
       <React.Fragment>
         <CssBaseline />
         <Typography component="h6" variant="h6" className={classes.root}>
-          You have no portfolio yet!
+          You have no portfolio!
         </Typography>
       </React.Fragment>
     ) : (
@@ -204,7 +205,10 @@ class Portfolio extends Component {
                 <Button
                   onClick={this.handleSend}
                   color="primary"
-                  disabled={this.state.selectedQuantity > selected.quantity}
+                  disabled={
+                    this.state.selectedQuantity > selected.quantity ||
+                    this.state.selectedQuantity === 0
+                  }
                 >
                   Submit
                 </Button>
@@ -230,6 +234,7 @@ const mapDispatch = dispatch => {
   return {
     loadPortfolios(userId) {
       dispatch(fetchPortfolios(userId))
+      dispatch(me())
     },
     loadPortfolio(userId, ticker) {
       dispatch(fetchPortfolio(userId, ticker))
