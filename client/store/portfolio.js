@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const GET_PORTFOLIOS = 'GET_PORTFOLIO'
+const GET_PORTFOLIOS = 'GET_PORTFOLIOS'
+const GET_PORTFOLIO = 'GET_PORTFOLIO'
 
 const initialState = {all: [], isFetching: true}
 
