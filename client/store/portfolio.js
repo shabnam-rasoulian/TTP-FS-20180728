@@ -3,9 +3,10 @@ import axios from 'axios'
 const GET_PORTFOLIOS = 'GET_PORTFOLIOS'
 const GET_PORTFOLIO = 'GET_PORTFOLIO'
 
-const initialState = {all: [], isFetching: true}
+const initialState = {all: [], isFetching: true, selected: {}}
 
 const getPortfolios = portfolios => ({type: GET_PORTFOLIOS, portfolios})
+const getPortfolio = portfolio => ({type: GET_PORTFOLIO, portfolio})
 
 export const fetchPortfolios = id => async dispatch => {
   try {
@@ -22,7 +23,16 @@ export const fetchPortfolios = id => async dispatch => {
       portfolio.open = data[portfolio.ticker].quote.open
     })
     dispatch(getPortfolios(portfolios))
-    setTimeout(() => fetchPortfolios(id)(dispatch), 2000)
+    setTimeout(() => fetchPortfolios(id)(dispatch), 6000)
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export const fetchPortfolio = (id, ticker) => async dispatch => {
+  try {
+    const {data: portfolio} = await axios.get(`api/portfolios/${id}/${ticker}`)
+    dispatch(getPortfolio(portfolio))
   } catch (err) {
     console.log(err)
   }
@@ -31,7 +41,9 @@ export const fetchPortfolios = id => async dispatch => {
 export default function(state = initialState, action) {
   switch (action.type) {
     case GET_PORTFOLIOS:
-      return {isFetching: false, all: action.portfolios}
+      return {...state, isFetching: false, all: action.portfolios}
+    case GET_PORTFOLIO:
+      return {...state, selected: action.portfolio}
     default:
       return state
   }
