@@ -43,7 +43,7 @@ router.post('/:id/buy', async (req, res, next) => {
         const quantity = portfolio.quantity + Number(req.body.quantity)
         await Portfolio.update(
           {quantity: quantity},
-          {where: {id: req.params.id, ticker: req.body.ticker}}
+          {where: {userId: req.params.id, ticker: req.body.ticker}}
         )
       }
       await User.update({balance: newBalance}, {where: {id: req.params.id}})
