@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {fetchPortfolios} from '../store'
+import axios from 'axios'
+import {fetchPortfolio, fetchPortfolios, me, sellTransaction} from '../store'
 import CircularIndeterminate from './progress'
 import {withStyles} from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -12,6 +13,11 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import TextField from '@material-ui/core/TextField'
 
 const styles = theme => ({
   root: {
@@ -40,12 +46,57 @@ const styles = theme => ({
 })
 
 class Portfolio extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      open: false,
+      selectedQuantity: 0
+    }
+    this.handleClickOpen = this.handleClickOpen.bind(this)
+    this.handleCancel = this.handleCancel.bind(this)
+    this.handleSend = this.handleSend.bind(this)
+    this.handleChange = this.handleChange.bind(this)
+  }
+
   componentDidMount() {
     this.props.loadPortfolios(this.props.user.id)
   }
 
+  handleChange(evt) {
+    this.setState({selectedQuantity: Number(evt.target.value)})
+  }
+
+  handleClickOpen(ticker) {
+    this.props.loadPortfolio(this.props.user.id, ticker)
+    this.setState({open: true})
+  }
+
+  handleCancel() {
+    this.setState({open: false})
+  }
+
+  async handleSend() {
+    this.setState({open: false})
+    try {
+      const res = await axios.get(
+        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${
+          this.props.selected.ticker
+        }&types=price&range=1m&last=1`
+      )
+      const price = res.data[this.props.selected.ticker].price
+      this.props.sell(
+        this.props.user.id,
+        this.props.selected.ticker,
+        this.state.selectedQuantity,
+        price
+      )
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   render() {
-    const {classes, isFetching, portfolios, user} = this.props
+    const {classes, isFetching, portfolios, user, selected} = this.props
     if (isFetching) {
       return <CircularIndeterminate />
     }
@@ -94,6 +145,7 @@ class Portfolio extends Component {
                   <TableCell>Ticker</TableCell>
                   <TableCell numeric>Quantity</TableCell>
                   <TableCell numeric>Total($)</TableCell>
+                  <TableCell>{}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -119,11 +171,45 @@ class Portfolio extends Component {
                       <TableCell numeric style={{color: color}}>
                         {(portfolio.quantity * portfolio.price).toFixed(2)}
                       </TableCell>
+                      <TableCell>
+                        <Button
+                          size="small"
+                          color="secondary"
+                          variant="outlined"
+                          onClick={() => this.handleClickOpen(portfolio.ticker)}
+                        >
+                          Sell
+                        </Button>
+                      </TableCell>
                     </TableRow>
                   )
                 })}
               </TableBody>
             </Table>
+            <Dialog open={this.state.open} aria-labelledby="form-dialog-title">
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  label="Number of shares"
+                  fullWidth
+                  onChange={this.handleChange}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={this.handleCancel} color="primary">
+                  Cancel
+                </Button>
+                <Button
+                  onClick={this.handleSend}
+                  color="primary"
+                  disabled={this.state.selectedQuantity > selected.quantity}
+                >
+                  Submit
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Paper>
         </Typography>
       </React.Fragment>
@@ -135,7 +221,8 @@ const mapState = state => {
   return {
     user: state.user,
     portfolios: state.portfolios.all,
-    isFetching: state.portfolios.isFetching
+    isFetching: state.portfolios.isFetching,
+    selected: state.portfolios.selected
   }
 }
 
@@ -143,6 +230,15 @@ const mapDispatch = dispatch => {
   return {
     loadPortfolios(userId) {
       dispatch(fetchPortfolios(userId))
+    },
+    loadPortfolio(userId, ticker) {
+      dispatch(fetchPortfolio(userId, ticker))
+    },
+    sell(userId, ticker, quantity, price) {
+      dispatch(sellTransaction(userId, ticker, quantity, price)).then(() => {
+        dispatch(me())
+        dispatch(fetchPortfolios(userId))
+      })
     }
   }
 }
