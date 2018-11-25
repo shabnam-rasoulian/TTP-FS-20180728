@@ -57,3 +57,45 @@ router.post('/:id/buy', async (req, res, next) => {
     next(err)
   }
 })
+
+router.post('/:id/sell', async (req, res, next) => {
+  try {
+    let transaction
+    await db.transaction(async function(tt) {
+      const portfolio = await Portfolio.findOne({
+        where: {userId: req.params.id, ticker: req.body.ticker}
+      })
+      if (!portfolio) {
+        res.status(404).send('No such portfolio for this user!')
+        return
+      }
+      const newQuantity = portfolio.quantity - Number(req.body.quantity)
+      if (newQuantity > 0) {
+        await Portfolio.update(
+          {quantity: newQuantity},
+          {where: {userId: req.params.id, ticker: req.body.ticker}}
+        )
+      } else {
+        await Portfolio.destroy({
+          where: {userId: req.params.id, ticker: req.body.ticker}
+        })
+      }
+      transaction = await Transaction.create({
+        ticker: req.body.ticker,
+        quantity: req.body.quantity,
+        price: req.body.price,
+        tradeType: 'sell',
+        userId: req.params.id
+      })
+      const user = await User.findOne({
+        where: {id: req.params.id},
+        lock: tt.LOCK.UPDATE
+      })
+      const newBalance = user.balance + req.body.price * req.body.quantity
+      await User.update({balance: newBalance}, {where: {id: req.params.id}})
+    })
+    res.json(transaction)
+  } catch (err) {
+    next(err)
+  }
+})
