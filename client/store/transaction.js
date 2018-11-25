@@ -52,6 +52,31 @@ export const buyTransaction = (
   }
 }
 
+export const sellTransaction = (
+  userId,
+  ticker,
+  quantity,
+  price
+) => async dispatch => {
+  try {
+    console.log('sellTransaction')
+    const {data: transaction} = await axios.post(
+      `/api/transactions/${userId}/sell`,
+      {
+        ticker,
+        quantity,
+        price
+      }
+    )
+    console.log('sellTransaction')
+    dispatch(doneTransaction(transaction))
+    console.log('sellTransaction')
+  } catch (err) {
+    console.log(err)
+    dispatch(errTransaction(err))
+  }
+}
+
 export default function(state = initialState, action) {
   switch (action.type) {
     case GET_TRANSACTIONS:
@@ -62,6 +87,7 @@ export default function(state = initialState, action) {
         error: null
       }
     case DONE_TRANSACTION:
+      console.log('done transaction')
       return {...state, all: [...state.all, action.transaction], error: null}
     case ERROR_TRANSACTION:
       return {...state, error: action.err}
