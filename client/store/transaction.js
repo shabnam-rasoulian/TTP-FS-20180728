@@ -59,7 +59,6 @@ export const sellTransaction = (
   price
 ) => async dispatch => {
   try {
-    console.log('sellTransaction')
     const {data: transaction} = await axios.post(
       `/api/transactions/${userId}/sell`,
       {
@@ -68,7 +67,6 @@ export const sellTransaction = (
         price
       }
     )
-    console.log('sellTransaction')
     dispatch(doneTransaction(transaction))
     console.log('sellTransaction')
   } catch (err) {
