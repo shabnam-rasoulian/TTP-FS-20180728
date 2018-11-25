@@ -12,3 +12,14 @@ router.get('/:id', async (req, res, next) => {
     next(err)
   }
 })
+
+router.get('/:id/:ticker', async (req, res, next) => {
+  try {
+    const portfolio = await Portfolio.findOne({
+      where: {userId: req.params.id, ticker: req.params.ticker}
+    })
+    res.json(portfolio)
+  } catch (err) {
+    next(err)
+  }
+})
