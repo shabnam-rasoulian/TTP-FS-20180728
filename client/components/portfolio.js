@@ -68,12 +68,14 @@ class Portfolio extends Component {
               color="textPrimary"
               gutterBottom
             >
-              Portfolio: ${user.balance +
+              Portfolio: ${(
+                user.balance +
                 portfolios.reduce(
                   (acc, portfolio) =>
                     acc + portfolio.quantity * portfolio.price,
                   0
-                )}
+                )
+              ).toFixed(2)}
             </Typography>
             <Typography
               component="subtitle1"
