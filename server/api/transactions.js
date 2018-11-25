@@ -16,14 +16,18 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/:id/buy', async (req, res, next) => {
   try {
-    await db.transaction(async function() {
-      const user = await User.findOne({where: {id: req.params.id}})
+    let transaction
+    await db.transaction(async function(tt) {
+      const user = await User.findOne({
+        where: {id: req.params.id},
+        lock: tt.LOCK.UPDATE
+      })
       const newBalance = user.balance - req.body.price * req.body.quantity
       if (user.balance < newBalance) {
         res.status(404).send('No enough fund!')
         return
       }
-      const transaction = await Transaction.create({
+      transaction = await Transaction.create({
         ticker: req.body.ticker,
         quantity: req.body.quantity,
         tradeType: 'buy',
@@ -47,8 +51,8 @@ router.post('/:id/buy', async (req, res, next) => {
         )
       }
       await User.update({balance: newBalance}, {where: {id: req.params.id}})
-      res.json(transaction)
     })
+    res.json(transaction)
   } catch (err) {
     next(err)
   }
