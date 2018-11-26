@@ -68,7 +68,6 @@ export const sellTransaction = (
       }
     )
     dispatch(doneTransaction(transaction))
-    console.log('sellTransaction')
   } catch (err) {
     console.log(err)
     dispatch(errTransaction(err))
@@ -85,7 +84,6 @@ export default function(state = initialState, action) {
         error: null
       }
     case DONE_TRANSACTION:
-      console.log('done transaction')
       return {...state, all: [...state.all, action.transaction], error: null}
     case ERROR_TRANSACTION:
       return {...state, error: action.err}
