@@ -230,8 +230,9 @@ const mapState = state => {
   }
 }
 const mapDispatch = dispatch => ({
-  buy: (userId, ticker, quantity, price) =>
+  buy: (userId, ticker, quantity, price) => {
     dispatch(buyTransaction(userId, ticker, quantity, price))
+  }
 })
 
 export default connect(mapState, mapDispatch)(withStyles(styles)(Buy))

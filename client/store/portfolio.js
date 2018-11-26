@@ -11,19 +11,17 @@ const getPortfolio = portfolio => ({type: GET_PORTFOLIO, portfolio})
 export const fetchPortfolios = id => async dispatch => {
   try {
     const {data: portfolios} = await axios.get(`/api/portfolios/${id}`)
-    if (portfolios.length === 0) {
-      dispatch(getPortfolios(portfolios))
+    if (portfolios.length > 0) {
+      const symbols = portfolios.map(portfolio => portfolio.ticker).join(',')
+      const {data} = await axios.get(
+        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${symbols}&types=quote&range=1m&last=1`
+      )
+      portfolios.forEach(portfolio => {
+        portfolio.price = data[portfolio.ticker].quote.latestPrice
+        portfolio.open = data[portfolio.ticker].quote.open
+      })
     }
-    const symbols = portfolios.map(portfolio => portfolio.ticker).join(',')
-    const {data} = await axios.get(
-      `https://api.iextrading.com/1.0/stock/market/batch?symbols=${symbols}&types=quote&range=1m&last=1`
-    )
-    portfolios.forEach(portfolio => {
-      portfolio.price = data[portfolio.ticker].quote.latestPrice
-      portfolio.open = data[portfolio.ticker].quote.open
-    })
     dispatch(getPortfolios(portfolios))
-    setTimeout(() => fetchPortfolios(id)(dispatch), 6000)
   } catch (err) {
     console.log(err)
   }

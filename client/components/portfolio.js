@@ -52,6 +52,7 @@ class Portfolio extends Component {
       open: false,
       selectedQuantity: 0
     }
+    this.intervalSet = null
     this.handleClickOpen = this.handleClickOpen.bind(this)
     this.handleCancel = this.handleCancel.bind(this)
     this.handleSend = this.handleSend.bind(this)
@@ -60,6 +61,15 @@ class Portfolio extends Component {
 
   componentDidMount() {
     this.props.loadPortfolios(this.props.user.id)
+    this.intervalSet = setInterval(() => {
+      this.props.loadPortfolios(this.props.user.id)
+    }, 5000)
+  }
+
+  componentWillUnmount() {
+    if (this.intervalSet) {
+      clearInterval(this.intervalSet)
+    }
   }
 
   handleChange(evt) {
@@ -234,7 +244,7 @@ const mapDispatch = dispatch => {
   return {
     loadPortfolios(userId) {
       dispatch(fetchPortfolios(userId))
-      dispatch(me())
+      //setTimeout(() => this.props.loadPortfolios(userId), 6000)
     },
     loadPortfolio(userId, ticker) {
       dispatch(fetchPortfolio(userId, ticker))
