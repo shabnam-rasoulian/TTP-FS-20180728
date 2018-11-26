@@ -8,7 +8,8 @@ class BalanceCheck extends Component {
     super(props)
     this.state = {
       isFetching: true,
-      price: 0
+      price: 0,
+      tickerError: false
     }
   }
 
@@ -27,13 +28,27 @@ class BalanceCheck extends Component {
         this.setState({price: price, isFetching: false})
       })
       .catch(err => {
+        if (err.message === "Cannot read property 'price' of undefined") {
+          this.setState({tickerError: true, isFetching: false})
+        }
         console.log(err)
       })
   }
 
   render() {
     if (this.state.isFetching) {
-      return <div>Fetching the price!</div>
+      return (
+        <Typography component="h6" variant="h6">
+          Fetching the price!
+        </Typography>
+      )
+    }
+    if (this.state.tickerError) {
+      return (
+        <Typography component="h6" variant="h6">
+          Ticker is not available!
+        </Typography>
+      )
     }
     const cost = this.state.price * this.props.quantity
     const balance = this.props.balance - cost
