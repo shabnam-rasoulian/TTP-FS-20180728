@@ -63,7 +63,7 @@ class Portfolio extends Component {
     this.props.loadPortfolios(this.props.user.id)
     this.intervalSet = setInterval(() => {
       this.props.loadPortfolios(this.props.user.id)
-    }, 5000)
+    }, 10000)
   }
 
   componentWillUnmount() {
