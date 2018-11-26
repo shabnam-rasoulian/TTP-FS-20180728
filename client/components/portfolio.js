@@ -244,7 +244,7 @@ const mapDispatch = dispatch => {
   return {
     loadPortfolios(userId) {
       dispatch(fetchPortfolios(userId))
-      //setTimeout(() => this.props.loadPortfolios(userId), 6000)
+      dispatch(me())
     },
     loadPortfolio(userId, ticker) {
       dispatch(fetchPortfolio(userId, ticker))
