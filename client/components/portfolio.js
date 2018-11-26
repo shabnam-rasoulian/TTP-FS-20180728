@@ -217,7 +217,8 @@ class Portfolio extends Component {
                   color="primary"
                   disabled={
                     this.state.selectedQuantity > selected.quantity ||
-                    this.state.selectedQuantity === 0
+                    this.state.selectedQuantity === 0 ||
+                    this.state.selectedQuantity % 1 > 0
                   }
                 >
                   Submit
