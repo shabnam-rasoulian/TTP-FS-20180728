@@ -60,7 +60,7 @@ class Buy extends Component {
       ticker: '',
       quantity: 0,
       price: 0,
-      hasEnoughFunds: false
+      checkErr: false
     }
     this.handleNext = this.handleNext.bind(this)
     this.handleBack = this.handleBack.bind(this)
@@ -106,8 +106,8 @@ class Buy extends Component {
     this.setState({price})
   }
 
-  balanceCheck(hasEnoughFunds) {
-    this.setState({hasEnoughFunds})
+  balanceCheck(checkErr) {
+    this.setState({checkErr})
   }
 
   retry() {
@@ -204,7 +204,7 @@ class Buy extends Component {
                       color="primary"
                       onClick={this.handleNext}
                       className={classes.button}
-                      disabled={activeStep === 1 && !this.state.hasEnoughFunds}
+                      disabled={activeStep === 1 && !this.state.checkErr}
                     >
                       {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
                     </Button>
