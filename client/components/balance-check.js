@@ -14,6 +14,10 @@ class BalanceCheck extends Component {
   }
 
   componentDidMount() {
+    if (this.props.quantity % 1 > 0) {
+      this.props.onFetch(false)
+      return
+    }
     const ticker = this.props.ticker.toUpperCase()
     axios
       .get(
@@ -29,6 +33,7 @@ class BalanceCheck extends Component {
       })
       .catch(err => {
         if (err.message === "Cannot read property 'price' of undefined") {
+          this.props.onFetch(false)
           this.setState({tickerError: true, isFetching: false})
         }
         console.log(err)
@@ -36,6 +41,13 @@ class BalanceCheck extends Component {
   }
 
   render() {
+    if (this.props.quantity % 1 > 0) {
+      return (
+        <Typography component="h6" variant="h6">
+          Cannot trade fraction of shares!
+        </Typography>
+      )
+    }
     if (this.state.isFetching) {
       return (
         <Typography component="h6" variant="h6">
@@ -50,10 +62,11 @@ class BalanceCheck extends Component {
         </Typography>
       )
     }
+
     const cost = this.state.price * this.props.quantity
     const balance = this.props.balance - cost
     return balance < 0 ? (
-      <Typography component="h6" variant="h6" align="center">
+      <Typography component="h6" variant="h6">
         Sorry! Not have enough fund available for this transaction!
       </Typography>
     ) : (
