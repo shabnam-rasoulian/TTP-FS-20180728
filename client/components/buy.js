@@ -231,7 +231,7 @@ const mapState = state => {
 }
 const mapDispatch = dispatch => ({
   buy: (userId, ticker, quantity, price) => {
-    dispatch(buyTransaction(userId, ticker, quantity, price))
+    dispatch(buyTransaction(userId, ticker.toUpperCase(), quantity, price))
   }
 })
 

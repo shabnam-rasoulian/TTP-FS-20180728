@@ -13,14 +13,13 @@ class BalanceCheck extends Component {
   }
 
   componentDidMount() {
+    const ticker = this.props.ticker.toUpperCase()
     axios
       .get(
-        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${
-          this.props.ticker
-        }&types=price&range=1m&last=1`
+        `https://api.iextrading.com/1.0/stock/market/batch?symbols=${ticker}&types=price&range=1m&last=1`
       )
       .then(res => {
-        const price = res.data[this.props.ticker].price
+        const price = res.data[ticker].price
         this.props.getPrice(price)
         const cost = price * this.props.quantity
         const balance = this.props.balance - cost
