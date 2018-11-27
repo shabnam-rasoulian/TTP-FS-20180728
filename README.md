@@ -10,6 +10,12 @@ This is my submission for the TTP program.
 
 Create a database in PostgreSQL named `TTP-FS-20180728`.
 
+Install dependencies using npm:
+
+```bash
+npm install
+```
+
 Seed the database using npm:
 
 ```bash
