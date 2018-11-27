@@ -1,5 +1,28 @@
-Start
-Database name is TTP-FS-20180728
-npm run seed will seed the database using the seed file in the script folder
-npm run start-dev will start the application!
-To run the server and/or webpack separately, you can also npm run start-server and npm run build-client.
+# TTP-FS-20180728
+
+This is my submission for the TTP program.
+
+## Demo
+
+![Demo](public/demo.gif)
+
+## Quick Start
+
+Create a database in PostgreSQL named `TTP-FS-20180728`.
+
+Seed the database using npm:
+
+```bash
+npm run seed
+```
+
+Run the server in development mode using npm:
+
+```bash
+npm run start-dev
+```
+
+The service will start on port `8080`.
+
+You can login using `shabnam@gmail.com` as username,
+and `shabnam123` as password.
